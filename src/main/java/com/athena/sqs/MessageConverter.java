@@ -55,7 +55,6 @@ public class MessageConverter {
 			out = new ObjectOutputStream(bos);   
 			out.writeObject(object);
 			byte[] bytesObject = bos.toByteArray(); 
-	
 			
 			return bytesObject;
 		} catch(IOException ioe) {
