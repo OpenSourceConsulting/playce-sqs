@@ -35,7 +35,7 @@ public class MessageConverter {
 			return message.getBytes();
 		}
 		return message.getBytes(encoding);
-	}
+	} 
 	
 	/**
 	 * Converts object to byte array
