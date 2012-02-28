@@ -2,6 +2,8 @@ package com.athena.sqs;
 
 
 import java.io.IOException;
+import java.util.List;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -46,8 +48,17 @@ public class MessageReceiveListener  implements ServletContextListener {
 			logger.debug("SQS Message Receiver is starting");
 			logger.debug("***********************************************");
 
-			// Default queue name must be changed.
-			receiver.doReceive(listenQueueName);
+			// Queue names are loaded from sqsContext.xml
+
+		   List<String> queueList = (List<String>) applicationContext.getBean("initialQueueList");
+		   
+		   for( String queueName : queueList) {
+			   receiver.doReceive(queueName);
+			   Thread.sleep(2000);
+		   }
+		   
+		   // Default listen queue start
+		   receiver.doReceive(listenQueueName);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
