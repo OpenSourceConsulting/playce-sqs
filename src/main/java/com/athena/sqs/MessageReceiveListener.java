@@ -27,7 +27,7 @@ public class MessageReceiveListener  implements ServletContextListener {
         ServletContext servletContext = sce.getServletContext();
         listenQueueName = servletContext.getInitParameter("listenQueueName");
         if( listenQueueName == null ) {
-        	listenQueueName = "vhub_sqs_code";
+        	listenQueueName = "your_listen_queue_name";
         }
 
 		ApplicationContext applicationContext = (ApplicationContext)servletContext.getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
