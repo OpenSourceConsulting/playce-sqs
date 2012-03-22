@@ -10,14 +10,17 @@ import java.util.UUID;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
-import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 
 import sun.misc.BASE64Encoder;
 
+import com.amazonaws.AmazonClientException;
+import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.sqs.AmazonSQSClient;
 import com.amazonaws.services.sqs.model.SendMessageRequest;
 
@@ -33,7 +36,7 @@ import com.amazonaws.services.sqs.model.SendMessageRequest;
 @Service
 @DependsOn("messageContext")
 public class MessageDispatcher {
-	private final Logger logger = Logger.getLogger(this.getClass());
+	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	private @Autowired MessageContext messageContext;
 
@@ -59,9 +62,11 @@ public class MessageDispatcher {
 			}
 
 			doSend(queueName, jsonString);
-			logger.debug("Message is successfulyy sent to SQS [" + queueName + "]");
+			logger.debug("Message is successfully sent to SQS [" + queueName + "]");
 
-		} catch (Exception e) {
+		}catch (MessageException e) {
+			throw e;
+		}catch (Exception e) {
 			throw new MessageException(MessageFormat.format(MessageErrors.INTERNAL_ERROR.getDescription(), e.getMessage()));
 		} finally{
 
@@ -112,10 +117,25 @@ public class MessageDispatcher {
 				}
 				logger.debug("Complex message sent successfully");
 			}
-		} catch(IOException ioe) {
-			new MessageException(MessageFormat.format(MessageErrors.INTERNAL_ERROR.getDescription(), ioe.getMessage()));
+		} catch (AmazonServiceException ase) {
+            logger.error("Caught an AmazonServiceException, which means your request made it " +
+                    "to Amazon SQS, but was rejected with an error response for some reason.");
+            logger.error("Error Message:    " + ase.getMessage());
+            logger.error("HTTP Status Code: " + ase.getStatusCode());
+            logger.error("AWS Error Code:   " + ase.getErrorCode());
+            logger.error("Error Type:       " + ase.getErrorType());
+            logger.error("Request ID:       " + ase.getRequestId());
+            throw new MessageException(MessageFormat.format(MessageErrors.AMAZON_ERROR.getDescription(), ase.getMessage()));
+        } catch (AmazonClientException ace) {
+            logger.error("Caught an AmazonClientException, which means the client encountered " +
+                    "a serious internal problem while trying to communicate with SQS, such as not " +
+                    "being able to access the network.");
+            logger.error("Error Message: " + ace.getMessage());
+            throw new MessageException(MessageFormat.format(MessageErrors.AMAZON_ERROR.getDescription(), ace.getMessage()));
+        } catch(IOException ioe) {
+			throw new MessageException(MessageFormat.format(MessageErrors.INTERNAL_ERROR.getDescription(), ioe.getMessage()));
 		} catch(Exception e) {
-			new MessageException(MessageFormat.format(MessageErrors.INTERNAL_ERROR.getDescription(), e.getMessage()));
+			throw new MessageException(MessageFormat.format(MessageErrors.INTERNAL_ERROR.getDescription(), e.getMessage()));
 		} finally {
 			
 		}

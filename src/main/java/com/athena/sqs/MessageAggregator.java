@@ -4,11 +4,12 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.log4j.Logger;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import sun.misc.BASE64Decoder;
@@ -22,7 +23,7 @@ import sun.misc.BASE64Decoder;
  */
 @Service
 public class MessageAggregator {
-	private final Logger logger = Logger.getLogger(this.getClass());
+	private final Logger logger = LoggerFactory.getLogger(getClass());
 	// Store transaction id and message map
 	private static ConcurrentHashMap<String, ConcurrentHashMap<Integer, String>> txMap = new ConcurrentHashMap<String, ConcurrentHashMap<Integer, String>>();
 
@@ -118,7 +119,7 @@ public class MessageAggregator {
 			ObjectMapper mapper = new ObjectMapper();
 			Message message = mapper.readValue(rawString, new TypeReference<Message>(){});
 			logger.debug("=======================[MESSAGES]=============================");
-			logger.debug(message);
+			logger.debug(message.toString());
 			logger.debug("===========================================================");
 
 		} catch(Exception e) {

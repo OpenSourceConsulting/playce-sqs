@@ -8,7 +8,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -20,7 +21,7 @@ import org.springframework.web.context.WebApplicationContext;
  *
  */
 public class MessageReceiveListener  implements ServletContextListener {
-	private final Logger logger = Logger.getLogger(this.getClass());
+	private final Logger logger = LoggerFactory.getLogger(getClass());
 	
 	private MessageReceiver receiver;
 	private String listenQueueName;

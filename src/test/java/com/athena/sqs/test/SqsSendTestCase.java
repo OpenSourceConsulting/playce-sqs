@@ -53,8 +53,6 @@ public class SqsSendTestCase {
 		message.setListData(data);
 		
 		
-		dispatcher.doProcess("athena-queue", message);
+		dispatcher.doProcess("vhub_sqs_codex", message);
 	}
-
-
 }

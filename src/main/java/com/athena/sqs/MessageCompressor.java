@@ -4,7 +4,8 @@ import java.io.*;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -15,7 +16,7 @@ import org.apache.log4j.Logger;
  *
  */
 public class MessageCompressor {
-	private static final Logger logger = Logger.getLogger(MessageCompressor.class);
+	private final Logger logger = LoggerFactory.getLogger(MessageCompressor.class);
     private static String CHARSET = "utf-8";
     private static final int BUFFER_SIZE = 1024 * 4;
 
@@ -66,10 +67,23 @@ public class MessageCompressor {
     }
 
 
+    /**
+     * Uncompress the string data
+     * @param input
+     * @return
+     * @throws IOException
+     */
     public static byte[] uncompress(String input) throws IOException {
         return uncompress(input, CHARSET);
     }
 
+    /**
+     * Uncompress the input string with character set
+     * @param input
+     * @param charset
+     * @return
+     * @throws IOException
+     */
     public static byte[] uncompress(String input, String charset) throws IOException {
         return uncompress(input.getBytes(charset));
     }
@@ -78,7 +92,12 @@ public class MessageCompressor {
         return uncompress(new ByteArrayInputStream(bytes));
     }
 
-
+    /**
+     * Uncompress input data
+     * @param input
+     * @return uncompressed byte array
+     * @throws IOException
+     */
     public static byte[] uncompress(InputStream input) throws IOException {
         ByteArrayOutputStream bos = null;
         InputStream zipInput = null;
@@ -110,23 +129,5 @@ public class MessageCompressor {
         while ((len = input.read(buf, 0, buf.length)) != -1) {
         	output.write(buf, 0, len);
         }
-    }
-
-    public static void main(String [] args) throws Exception {
-    	BufferedReader br = new BufferedReader(new FileReader("c:\\temp\\a.txt"));
-    	String line = "";
-    	StringBuilder sb = new StringBuilder();
-    	while((line = br.readLine()) != null) {
-    		sb.append(line).append("\r\n");
-    	}
-
-    	logger.debug("Before Compress Size : " + sb.toString().getBytes().length);
-    	byte [] compressed = MessageCompressor.compress(sb.toString().getBytes());
-    	logger.debug("After compress size : " + compressed.length);
-
-    	byte [] uncompressed = MessageCompressor.uncompress(compressed);
-    	logger.debug("After uncompress size : " + uncompressed.length);
-    	FileOutputStream fw = new FileOutputStream("C:\\Temp\\b.txt");
-    	fw.write(uncompressed);
     }
 }

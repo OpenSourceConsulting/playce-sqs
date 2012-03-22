@@ -47,8 +47,8 @@ public class MessageContext {
 	@PostConstruct
 	public void doConnect() throws Exception {
 		try {
-			AmazonSQSClient sqs = new AmazonSQSAsyncClient(credentials);
-			//AmazonSQSClient sqs = new AmazonSQSClient(credentials);
+			//AmazonSQSClient sqs = new AmazonSQSAsyncClient(credentials);
+			AmazonSQSClient sqs = new AmazonSQSClient(credentials);
 			sqs.setEndpoint("http://sqs.eu-west-1.amazonaws.com");
 
 	        logger.debug("Start Connection with Amazon SQS");
@@ -65,8 +65,8 @@ public class MessageContext {
 	 * Gets real queue url from SQS
 	 * @param queueName name of the queue
 	 * @return real queue name
-	 * @throws MessageException
-	 */
+	 * @throws MessageException 
+	 */ 
 	public String getQueue(String queueName) throws MessageException {
 		String queueUrl = null;
         try {
@@ -80,13 +80,9 @@ public class MessageContext {
 	        queueUrl =  queueResult.getQueueUrl();
 
         } catch (AmazonServiceException ase) {
-            if(ase.getErrorCode().equals("AWS.SimpleQueueService.NonExistentQueue")) {
-            	throw new MessageException(MessageFormat.format(MessageErrors.QUEUE_NOT_FOUND.getDescription(), queueName));
-            }
+            throw ase;
         } catch (AmazonClientException ace) {
-        	throw new MessageException(MessageFormat.format(MessageErrors.AMAZON_ERROR.getDescription(), ace.getMessage()));
-        } catch (Exception e) {
-        	
+            throw ace;
         }
         return queueUrl;
 	}

@@ -20,6 +20,6 @@ public class SqsReceiveTestCase {
 	@Test
 	public void receiveLargeMessage() throws Exception {
 		MessageReceiver receiver = context.getBean(MessageReceiver.class);
-		receiver.doReceive("athena-queue");
+		receiver.doReceive("vhub_sqs_codex");
 	}
 }

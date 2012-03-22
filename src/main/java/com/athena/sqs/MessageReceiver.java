@@ -8,7 +8,9 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
-import org.apache.log4j.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.scheduling.annotation.Async;
@@ -28,7 +30,8 @@ import com.amazonaws.services.sqs.model.ReceiveMessageRequest;
 @Service
 @DependsOn("messageContext")
 public class MessageReceiver {
-	private final Logger logger = Logger.getLogger(this.getClass());
+	private final Logger logger = LoggerFactory.getLogger(getClass());
+	
 	private static final long DEFAULT_POLLING_INTERVAL = 3000;  // 3 seconds interval
 	
 	private long pollingFrequency;
@@ -52,7 +55,7 @@ public class MessageReceiver {
 		this.pollingFrequency = pollingFrequency;
 	}
 	
-	@Async
+//	@Async
 	public void doReceive(String queueName) throws Exception {
 		String queueUrl = messageContext.getQueue(queueName);
 		logger.debug("Receiving a message to [" + queueName + "][" + queueUrl);

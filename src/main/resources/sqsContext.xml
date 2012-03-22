@@ -19,8 +19,8 @@
 	<task:annotation-driven/>
 
 	<bean id="credentials" class="com.amazonaws.auth.BasicAWSCredentials">
-		<constructor-arg index="0" value="accessKey"/>
-        <constructor-arg index="1" value="secretKey"  />
+		<constructor-arg index="0" value="AKIAJZR7ZYSYZOIXMRXQ"/>
+        <constructor-arg index="1" value="J5/Uu9hGLT0v8dYEjRv3eJEt2qiuid1Bn+8A/JMm"  />
 	</bean>
 	
 	<!-- MessageReceiveListener Queue List Information -->
