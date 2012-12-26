@@ -11,9 +11,7 @@ If you use this SQS library, you can send a large message(over 64Kb).
 - Compress Compressing body message for large message.(GZIP format).
 
 ## Links
-- Web Site: http://opensourceconsulting.co.kr
-- Docs: http://openseed.co.kr/athena/docs/sqs
-- Blog: http://athena.openseed.co.kr/sqs
+- Company Web Site: http://opensourceconsulting.co.kr, http://www.osci.kr
 - Facebook: http://www.facebook.com/osckorea
 
 ## Developer Information
