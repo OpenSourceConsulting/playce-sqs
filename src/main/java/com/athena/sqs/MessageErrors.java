@@ -22,7 +22,7 @@ package com.athena.sqs;
  *
  */
 public enum MessageErrors {
-	QUEUE_NOT_FOUND("Queue name [{0}] is not found. Please contact technical architecT in your project"), 
+	QUEUE_NOT_FOUND("Queue name [{0}] is not found. Please contact technical architect in your project"), 
 	AMAZON_ERROR("Amazon Error : {0} "), 
 	INTERNAL_ERROR("Component Error : {0} "),
 	NOT_SUPPORT("Can't support this feature");
